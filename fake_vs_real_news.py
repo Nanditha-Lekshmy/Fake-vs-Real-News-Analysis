@@ -85,7 +85,8 @@ news.tail(3)
 
 # Federica
 
-# Tokenize content in 'text' and create a new column 'tokens'
+# Tokenize content in 'text' column and create a new column 'tokens'
+# Converts sentences into tokens
 news['tokens'] = news['text'].swifter.apply(word_tokenize)
 
 # Display last rows to check new 'tokens' column
@@ -103,17 +104,18 @@ news.head(3)
 # Nanditha
 
 # Displays the stop words in english
+# Shows first 8 stopwords in the list
 stopWords = stopwords.words('english')
 stopWords[:8]
 
-# Removes the stop words
+# Removes the stop words from the news['tokens']
 news['tokens'] = news['tokens'].swifter.apply(
     lambda token_list: [token for token in token_list if token not in stopWords])
 
 news.head()
 
 # Apply stemming
-
+# replaces original tokens with stemmed tokens
 news['tokens'] = news['tokens'].swifter.apply(
     lambda token_list: [porterStemmer.stem(token) for token in token_list]
 )
@@ -135,9 +137,11 @@ news.head()
 # Data Visualization: Show before-and-after visuals of the data cleaning process.
 
 # Count words in each cell of the 'text' column (before data cleaning)
+# Used to plot how the text contained before data cleaning
 news['word_count'] = news['text'].swifter.apply(lambda x: len(str(x).split()))
 
 # Count words in each cell of the 'tokens' column (after data cleaning)
+# Used for plotting how the text looks lik after data cleaning
 news['token_count'] = news['tokens'].apply(len)
 
 # Display table to show new columns
@@ -449,6 +453,7 @@ def compoundScore(text):
    return compound
 
 # Apply the function to the 'tokens' column and save the compound score to a new column
+# First it converts tokens back to text because sentiment analyzer require a full sentence
 news['polarity'] = news['tokens'].apply(lambda x: ' '.join(x)).apply(compoundScore)
 
 news.head(3)
